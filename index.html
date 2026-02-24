@@ -7,24 +7,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-  :root {
-    --ink:         #1a1a2e;
-    --ink-soft:    #3d3d5c;
-    --cream:       #f8f5f0;
-    --cream-dark:  #ede9e3;
-    --gold:        #c9a84c;
-    --gold-light:  #e8c97a;
-    --gold-bg:     #fdf6e3;
-    --blue:        #2d6a8f;
-    --blue-light:  #d6e8f5;
-    --green:       #3a7d5f;
-    --green-light: #d4ede4;
-    --warn:        #b85a2d;
-    --warn-light:  #fae5d9;
+:root {
+    --ink:         #002169;
+    --ink-soft:    #1d71b8;
+    --cream:       #f5f7fa;
+    --cream-dark:  #e8ecf2;
+    --gold:        #ffed00;
+    --gold-light:  #fff176;
+    --gold-bg:     #fffde7;
+    --blue:        #1d71b8;
+    --blue-light:  #d0e4f5;
+    --green:       #95c11f;
+    --green-light: #e8f5c0;
+    --warn:        #0090ac;
+    --warn-light:  #d0eef3;
     --white:       #ffffff;
-    --shadow:      0 4px 28px rgba(26,26,46,0.08);
-    --shadow-lg:   0 10px 48px rgba(26,26,46,0.15);
-  }
+    --shadow:      0 4px 28px rgba(0,33,105,0.10);
+    --shadow-lg:   0 10px 48px rgba(0,33,105,0.18);
+}
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
@@ -295,7 +295,7 @@
       <div class="geo-icon">⬡</div>
       <div class="geo-text">
         <h3>Moyenne géométrique</h3>
-        <p>Contrairement à la moyenne arithmétique, la moyenne géométrique amplifie l'impact de vos scores les plus bas — elle vous maintient responsable même lorsque la majorité de vos réponses sont élevées.</p>
+        <p>Contrairement à la moyenne arithmétique, la moyenne géométrique amplifie l'impact de vos scores les plus bas. Elle vous maintient responsable même lorsque la majorité de vos réponses sont élevées.</p>
       </div>
       <div class="geo-scores">
         <div class="geo-score-block">
@@ -317,7 +317,7 @@
 
     <!-- Charts -->
     <div class="chart-card">
-      <h2 class="card-title">Aperçu visuel</h2>
+      <h2 class="card-title">Scores</h2>
       <p class="card-sub">Comparaison de vos scores par section, avec la moyenne géométrique.</p>
       <div class="chart-grid">
         <div>
@@ -380,12 +380,15 @@ const DEFI_Q = [
 // ── URL param parsing ──────────────────────────────────────────────────────
 function params() {
   const p = new URLSearchParams(window.location.search);
+  const prenom  = p.get('Prénom')      || p.get('prenom')  || p.get('name')    || '';
+  const nom     = p.get('Nom')         || p.get('nom')      || '';
+  const fullName = [prenom, nom].filter(Boolean).join(' ');
   return {
-    name:    p.get('name')    || '',
-    email:   p.get('email')   || '',
-    dept:    p.get('dept')    || '',
-    pos:     p.get('pos')     || '',
-    company: p.get('company') || '',
+    name:    fullName || p.get('name') || 'Participant',
+    email:   p.get('E-mail')     || p.get('email')   || '',
+    dept:    p.get('Département') || p.get('dept')    || '',
+    pos:     p.get('Poste')      || p.get('pos')      || '',
+    company: p.get('Pharmacie')  || p.get('company')  || '',
     // Responsabilités: alias order A,D,E,C,B → questions 1,2,3,4,5
     a: +p.get('a'), // Q1 – Définir les gains
     d: +p.get('d'), // Q2 – Organiser
