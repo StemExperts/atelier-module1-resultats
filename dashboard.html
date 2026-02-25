@@ -628,6 +628,10 @@ function renderDashboard() {
   const respArith = avg(respAvgs.filter(v => v !== null));
   const defiArith = avg(defiAvgs.filter(v => v !== null));
   const globArith = avg([...respAvgs, ...defiAvgs].filter(v => v !== null));
+  // Convert to percentage (scores are out of 10)
+  const respArithPct = respArith !== null ? respArith * 10 : null;
+  const defiArithPct = defiArith !== null ? defiArith * 10 : null;
+  const globArithPct = globArith !== null ? globArith * 10 : null;
 
   let respGeo, defiGeo, globGeo;
   const bjVals = rows.map(r => num(r[COL_GEO_RESP])).filter(v => v !== null && v > 0);
@@ -645,17 +649,17 @@ function renderDashboard() {
   }
 
   const fmt = v => v !== null ? Math.round(v * 10) / 10 + '%' : '—';
-  document.getElementById('kpiRespArith').textContent = respArith !== null ? Math.round(respArith * 10) / 10 + '%' : '—';
+  document.getElementById('kpiRespArith').textContent = respArithPct !== null ? Math.round(respArithPct * 10) / 10 + '%' : '—';
   document.getElementById('kpiRespGeo').textContent = fmt(respGeo);
-  document.getElementById('kpiDefiArith').textContent = defiArith !== null ? Math.round(defiArith * 10) / 10 + '%' : '—';
+  document.getElementById('kpiDefiArith').textContent = defiArithPct !== null ? Math.round(defiArithPct * 10) / 10 + '%' : '—';
   document.getElementById('kpiDefiGeo').textContent = fmt(defiGeo);
-  document.getElementById('kpiGlobArith').textContent = globArith !== null ? Math.round(globArith * 10) / 10 + '%' : '—';
+  document.getElementById('kpiGlobArith').textContent = globArithPct !== null ? Math.round(globArithPct * 10) / 10 + '%' : '—';
   document.getElementById('kpiGlobGeo').textContent = fmt(globGeo);
 
   renderCompare([
-    { label: 'Responsabilités', arith: respArith !== null ? Math.round(respArith * 10) / 10 : null, geo: respGeo !== null ? Math.round(respGeo * 10) / 10 : null, color: 'var(--blue)', colorGeo: '#1a5a9a' },
-    { label: 'Défis', arith: defiArith !== null ? Math.round(defiArith * 10) / 10 : null, geo: defiGeo !== null ? Math.round(defiGeo * 10) / 10 : null, color: 'var(--green)', colorGeo: '#6a8a15' },
-    { label: 'Global', arith: globArith !== null ? Math.round(globArith * 10) / 10 : null, geo: globGeo !== null ? Math.round(globGeo * 10) / 10 : null, color: 'var(--teal)', colorGeo: '#007a92' },
+    { label: 'Responsabilités', arith: respArithPct !== null ? Math.round(respArithPct * 10) / 10 : null, geo: respGeo !== null ? Math.round(respGeo * 10) / 10 : null, color: 'var(--blue)', colorGeo: '#1a5a9a' },
+    { label: 'Défis', arith: defiArithPct !== null ? Math.round(defiArithPct * 10) / 10 : null, geo: defiGeo !== null ? Math.round(defiGeo * 10) / 10 : null, color: 'var(--green)', colorGeo: '#6a8a15' },
+    { label: 'Global', arith: globArithPct !== null ? Math.round(globArithPct * 10) / 10 : null, geo: globGeo !== null ? Math.round(globGeo * 10) / 10 : null, color: 'var(--teal)', colorGeo: '#007a92' },
   ]);
 
   renderBarRows('barsResp', RESP_QUESTIONS, respAvgs, 'var(--blue)');
