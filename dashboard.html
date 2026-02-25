@@ -102,15 +102,19 @@ body::before {
   max-width: 1100px; margin: 28px auto 0; padding: 0 24px;
   display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
 }
-.filter-bar label { font-size: 13px; font-weight: 600; color: var(--text-soft); }
-.filter-bar select {
+.filter-group { display: flex; align-items: center; gap: 8px; }
+.filter-divider { width: 1px; height: 28px; background: var(--navy-light); margin: 0 4px; }
+.filter-bar label { font-size: 13px; font-weight: 600; color: var(--text-soft); white-space: nowrap; }
+.filter-bar select,
+.filter-bar input[type="date"] {
   background: var(--white); border: 2px solid var(--navy-light);
   border-radius: 8px; padding: 8px 14px; font-size: 13px;
   color: var(--text); font-family: 'DM Sans', sans-serif;
   cursor: pointer; outline: none;
   transition: border-color 0.2s;
 }
-.filter-bar select:focus { border-color: var(--navy); }
+.filter-bar select:focus,
+.filter-bar input[type="date"]:focus { border-color: var(--navy); }
 .participant-count {
   margin-left: auto;
   background: var(--navy); color: var(--white);
@@ -160,10 +164,7 @@ body::before {
   display: flex; flex-direction: column; align-items: center;
   gap: 4px; padding-bottom: 6px;
 }
-.kpi-vs-line {
-  width: 1px; height: 30px;
-  background: var(--cream-dark);
-}
+.kpi-vs-line { width: 1px; height: 30px; background: var(--cream-dark); }
 .kpi-vs-label {
   font-size: 9px; text-transform: uppercase; letter-spacing: .1em;
   color: var(--text-soft); font-weight: 600;
@@ -196,9 +197,7 @@ body::before {
   font-weight: 700; margin-bottom: 20px;
   display: flex; align-items: center; gap: 8px;
 }
-.card-title-dot {
-  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
-}
+.card-title-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
 /* ── Bar rows ── */
 .bar-rows { display: flex; flex-direction: column; gap: 10px; }
@@ -207,21 +206,11 @@ body::before {
   grid-template-columns: 28px 1fr 140px 42px;
   align-items: center; gap: 10px;
 }
-.bar-qnum {
-  font-size: 11px; font-weight: 700; color: var(--text-soft);
-  text-align: right;
-}
+.bar-qnum { font-size: 11px; font-weight: 700; color: var(--text-soft); text-align: right; }
 .bar-qname { font-size: 12px; color: var(--text); line-height: 1.3; }
-.bar-track {
-  height: 8px; background: var(--cream-dark); border-radius: 4px; overflow: hidden;
-}
-.bar-fill {
-  height: 100%; border-radius: 4px;
-  transition: width 0.9s cubic-bezier(.4,0,.2,1);
-}
-.bar-score {
-  font-size: 13px; font-weight: 700; text-align: right;
-}
+.bar-track { height: 8px; background: var(--cream-dark); border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 0.9s cubic-bezier(.4,0,.2,1); }
+.bar-score { font-size: 13px; font-weight: 700; text-align: right; }
 .bar-row.low .bar-fill { background: #e53e3e !important; }
 .bar-row.low .bar-score { color: #e53e3e; }
 
@@ -239,25 +228,9 @@ body::before {
   font-size: 10px; font-weight: 600; width: 32px; text-align: right;
   text-transform: uppercase; letter-spacing: .06em;
 }
-.compare-bar-wrap {
-  flex: 1; height: 10px; background: var(--cream-dark); border-radius: 5px; overflow: hidden;
-}
-.compare-bar {
-  height: 100%; border-radius: 5px;
-  transition: width 1s cubic-bezier(.4,0,.2,1);
-}
-.compare-val {
-  font-size: 12px; font-weight: 700; width: 38px; text-align: right;
-}
-
-/* ── Section divider ── */
-.section-label {
-  font-size: 11px; letter-spacing: .15em; text-transform: uppercase;
-  font-weight: 700; color: var(--text-soft);
-  padding: 4px 0 12px;
-  border-bottom: 2px solid var(--cream-dark);
-  margin-bottom: 16px;
-}
+.compare-bar-wrap { flex: 1; height: 10px; background: var(--cream-dark); border-radius: 5px; overflow: hidden; }
+.compare-bar { height: 100%; border-radius: 5px; transition: width 1s cubic-bezier(.4,0,.2,1); }
+.compare-val { font-size: 12px; font-weight: 700; width: 38px; text-align: right; }
 
 /* ── Footer ── */
 .footer {
@@ -266,15 +239,10 @@ body::before {
   font-size: 11px; color: var(--text-soft); flex-wrap: wrap; gap: 8px;
 }
 .footer-sync { display: flex; align-items: center; gap: 6px; }
-.sync-dot {
-  width: 7px; height: 7px; border-radius: 50%; background: var(--green);
-}
+.sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
 
 /* ── Animations ── */
-.main > * {
-  opacity: 0; transform: translateY(16px);
-  animation: fadeUp 0.5s ease forwards;
-}
+.main > * { opacity: 0; transform: translateY(16px); animation: fadeUp 0.5s ease forwards; }
 .main > *:nth-child(1) { animation-delay: 0.1s; }
 .main > *:nth-child(2) { animation-delay: 0.2s; }
 .main > *:nth-child(3) { animation-delay: 0.3s; }
@@ -310,11 +278,17 @@ body::before {
 
 <!-- FILTER BAR -->
 <div class="filter-bar" id="filterBar" style="display:none">
-  <label for="dateFilter">Filtrer par date :</label>
-  <select id="dateFilter" onchange="renderDashboard()">
-    <option value="today">Aujourd'hui seulement</option>
-    <option value="all">Toutes les dates</option>
-  </select>
+  <div class="filter-group">
+    <label for="dateFilter">📅 Date :</label>
+    <input type="date" id="dateFilter" onchange="renderDashboard()"/>
+  </div>
+  <div class="filter-divider"></div>
+  <div class="filter-group">
+    <label for="posteFilter">👤 Poste :</label>
+    <select id="posteFilter" onchange="renderDashboard()">
+      <option value="all">Tous les postes</option>
+    </select>
+  </div>
   <div class="participant-count">
     <span id="countNum">0</span> participants
   </div>
@@ -431,10 +405,7 @@ body::before {
 </div>
 
 <script>
-// ══════════════════════════════════════════════════════
-// CONFIGURATION — changez seulement ces valeurs
-// ══════════════════════════════════════════════════════
-const CSV_URL = 'https://corsproxy.io/?url=' + encodeURIComponent('https://sheet.zohopublic.com/sheet/published/pv9kcea6425b01983412799844f2bd3244928?download=csv&sheetname=Donn%C3%A9es%20brutes');
+const CSV_URL = 'https://corsproxy.io/?url=' + encodeURIComponent('https://sheet.zohopublic.com/sheet/published/pv9kcea6425b01983412799844f2bd3244928?download=csv&sheetname=Feuille1');
 
 const RESP_QUESTIONS = [
   '1. Définir les gains à atteindre',
@@ -451,22 +422,17 @@ const DEFI_QUESTIONS = [
   '5. Gestion rigoureuse',
 ];
 
-// Indices des colonnes (0-based) dans le CSV
-// AR=43, AS=44, AT=45, AU=46, AV=47
-// AW=48, AX=49, AY=50, AZ=51, BA=52
-// BD=55 (date de fin), BJ=61, BK=62, BL=63
 const COL_RESP = [43, 44, 45, 46, 47];
 const COL_DEFI = [48, 49, 50, 51, 52];
-const COL_DATE = 55; // La réponse est terminée
+const COL_DATE = 55;
+const COL_POSTE = 5;
 const COL_GEO_RESP = 61;
 const COL_GEO_DEFI = 62;
 const COL_GEO_GLOB = 63;
 
-// ══════════════════════════════════════════════════════
 let allRows = [];
 let radarChartInstance = null;
 
-// Parse CSV
 function parseCSV(text) {
   const lines = text.trim().split('\n');
   if (lines.length < 2) return [];
@@ -488,16 +454,32 @@ function parseCSV(text) {
   });
 }
 
-// Get today's date string matching Zoho French format (e.g. "23 févr. 2026")
-function todayStr() {
-  const d = new Date();
-  const months = ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
-  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+// Convert Zoho French date "11 févr. 2026, 11 h 36..." to ISO "2026-02-11"
+function zohoDateToISO(dateStr) {
+  if (!dateStr) return null;
+  const months = {
+    'janv': '01', 'fevr': '02', 'mars': '03', 'avr': '04',
+    'mai':  '05', 'juin': '06', 'juil': '07', 'aout': '08',
+    'sept': '09', 'oct':  '10', 'nov':  '11', 'dec':  '12'
+  };
+  const clean = dateStr.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const m = clean.match(/(\d{1,2})\s+(\w+)\.?\s+(\d{4})/);
+  if (!m) return null;
+  const mo = months[m[2].replace(/\./g, '')] || '00';
+  return m[3] + '-' + mo + '-' + m[1].padStart(2, '0');
 }
 
-function isSameDay(dateStr) {
-  if (!dateStr) return false;
-  return dateStr.startsWith(todayStr());
+function populatePosteFilter() {
+  const sel = document.getElementById('posteFilter');
+  const current = sel.value;
+  const postes = [...new Set(allRows.map(r => r[COL_POSTE]).filter(p => p && p.trim()))].sort();
+  sel.innerHTML = '<option value="all">Tous les postes</option>';
+  postes.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p; opt.textContent = p;
+    if (p === current) opt.selected = true;
+    sel.appendChild(opt);
+  });
 }
 
 function num(val) {
@@ -508,7 +490,7 @@ function num(val) {
 function avg(arr) {
   const valid = arr.filter(v => v !== null && v > 0);
   if (!valid.length) return null;
-  return valid.reduce((a,b) => a+b, 0) / valid.length;
+  return valid.reduce((a, b) => a + b, 0) / valid.length;
 }
 
 function geoMean(vals) {
@@ -520,8 +502,8 @@ function geoMean(vals) {
   let y = 1;
   for (let i = 0; i < 40; i++) {
     let yp = 1;
-    for (let j = 0; j < n-1; j++) yp *= y;
-    y = ((n-1)*y + prod/yp) / n;
+    for (let j = 0; j < n - 1; j++) yp *= y;
+    y = ((n - 1) * y + prod / yp) / n;
   }
   return Math.round(y * 1000) / 10;
 }
@@ -542,12 +524,12 @@ function renderBarRows(containerId, questions, avgScores, color) {
     const row = document.createElement('div');
     row.className = 'bar-row' + (low ? ' low' : '');
     row.innerHTML = `
-      <div class="bar-qnum">${i+1}.</div>
-      <div class="bar-qname">${q.replace(/^\d+\.\s/,'')}</div>
+      <div class="bar-qnum">${i + 1}.</div>
+      <div class="bar-qname">${q.replace(/^\d+\.\s/, '')}</div>
       <div class="bar-track">
-        <div class="bar-fill" style="width:0%;background:${low?'#e53e3e':color}" data-pct="${p}"></div>
+        <div class="bar-fill" style="width:0%;background:${low ? '#e53e3e' : color}" data-pct="${p}"></div>
       </div>
-      <div class="bar-score" style="color:${low?'#e53e3e':color}">${Math.round(v*10)/10}</div>`;
+      <div class="bar-score" style="color:${low ? '#e53e3e' : color}">${Math.round(v * 10) / 10}</div>`;
     el.appendChild(row);
   });
   setTimeout(() => {
@@ -559,26 +541,26 @@ function renderCompare(sections) {
   const el = document.getElementById('compareRows');
   el.innerHTML = '';
   sections.forEach(s => {
-    const diff = s.arith !== null && s.geo !== null ? Math.round((s.arith - s.geo)*10)/10 : null;
+    const diff = s.arith !== null && s.geo !== null ? Math.round((s.arith - s.geo) * 10) / 10 : null;
     const row = document.createElement('div');
     row.className = 'compare-row';
     row.innerHTML = `
       <div class="compare-label">
         <strong>${s.label}</strong>
-        ${diff !== null ? `<span style="color:${diff>0?'#e53e3e':'var(--green)'}">Écart : ${diff > 0 ? '-' : '+'}${Math.abs(diff)}%</span>` : ''}
+        ${diff !== null ? `<span style="color:${diff > 0 ? '#e53e3e' : 'var(--green)'}">Écart : ${diff > 0 ? '-' : '+'}${Math.abs(diff)}%</span>` : ''}
       </div>
       <div class="compare-tracks">
         <div class="compare-track">
           <div class="compare-track-label" style="color:${s.color}">Arith.</div>
           <div class="compare-bar-wrap">
-            <div class="compare-bar" style="width:0%;background:${s.color}" data-pct="${s.arith||0}"></div>
+            <div class="compare-bar" style="width:0%;background:${s.color}" data-pct="${s.arith || 0}"></div>
           </div>
           <div class="compare-val" style="color:${s.color}">${pct(s.arith)}</div>
         </div>
         <div class="compare-track">
           <div class="compare-track-label" style="color:${s.colorGeo}">Géom.</div>
           <div class="compare-bar-wrap">
-            <div class="compare-bar" style="width:0%;background:${s.colorGeo}" data-pct="${s.geo||0}"></div>
+            <div class="compare-bar" style="width:0%;background:${s.colorGeo}" data-pct="${s.geo || 0}"></div>
           </div>
           <div class="compare-val" style="color:${s.colorGeo}">${pct(s.geo)}</div>
         </div>
@@ -624,10 +606,12 @@ function renderRadar(labels, data) {
 }
 
 function renderDashboard() {
-  const filterVal = document.getElementById('dateFilter').value;
-  const rows = filterVal === 'today'
-    ? allRows.filter(r => isSameDay(r[COL_DATE]))
-    : allRows;
+  const dateVal = document.getElementById('dateFilter').value;
+  const posteVal = document.getElementById('posteFilter').value;
+
+  let rows = allRows;
+  if (dateVal) rows = rows.filter(r => zohoDateToISO(r[COL_DATE]) === dateVal);
+  if (posteVal !== 'all') rows = rows.filter(r => r[COL_POSTE] === posteVal);
 
   document.getElementById('countNum').textContent = rows.length;
 
@@ -638,16 +622,13 @@ function renderDashboard() {
     return;
   }
 
-  // Calculate averages per question
   const respAvgs = COL_RESP.map(ci => avg(rows.map(r => num(r[ci]))));
   const defiAvgs = COL_DEFI.map(ci => avg(rows.map(r => num(r[ci]))));
 
-  // Arithmetic means (%)
-  const respArith = avg(respAvgs.filter(v=>v!==null));
-  const defiArith = avg(defiAvgs.filter(v=>v!==null));
-  const globArith = avg([...respAvgs, ...defiAvgs].filter(v=>v!==null));
+  const respArith = avg(respAvgs.filter(v => v !== null));
+  const defiArith = avg(defiAvgs.filter(v => v !== null));
+  const globArith = avg([...respAvgs, ...defiAvgs].filter(v => v !== null));
 
-  // Geometric means — from BJ/BK/BL columns if available, otherwise calculate
   let respGeo, defiGeo, globGeo;
   const bjVals = rows.map(r => num(r[COL_GEO_RESP])).filter(v => v !== null && v > 0);
   const bkVals = rows.map(r => num(r[COL_GEO_DEFI])).filter(v => v !== null && v > 0);
@@ -658,36 +639,31 @@ function renderDashboard() {
     defiGeo = avg(bkVals);
     globGeo = avg(blVals);
   } else {
-    // Fallback: calculate from raw scores
-    respGeo = avg(rows.map(r => geoMean(COL_RESP.map(ci => num(r[ci])))).filter(v=>v!==null));
-    defiGeo = avg(rows.map(r => geoMean(COL_DEFI.map(ci => num(r[ci])))).filter(v=>v!==null));
-    globGeo = avg(rows.map(r => geoMean([...COL_RESP,...COL_DEFI].map(ci => num(r[ci])))).filter(v=>v!==null));
+    respGeo = avg(rows.map(r => geoMean(COL_RESP.map(ci => num(r[ci])))).filter(v => v !== null));
+    defiGeo = avg(rows.map(r => geoMean(COL_DEFI.map(ci => num(r[ci])))).filter(v => v !== null));
+    globGeo = avg(rows.map(r => geoMean([...COL_RESP, ...COL_DEFI].map(ci => num(r[ci])))).filter(v => v !== null));
   }
 
-  // Update KPIs
-  const fmt = v => v !== null ? Math.round(v*10)/10 + '%' : '—';
-  document.getElementById('kpiRespArith').textContent = respArith !== null ? Math.round(respArith*10)/10+'%' : '—';
-  document.getElementById('kpiRespGeo').textContent   = fmt(respGeo);
-  document.getElementById('kpiDefiArith').textContent = respArith !== null ? Math.round(defiArith*10)/10+'%' : '—';
-  document.getElementById('kpiDefiGeo').textContent   = fmt(defiGeo);
-  document.getElementById('kpiGlobArith').textContent = globArith !== null ? Math.round(globArith*10)/10+'%' : '—';
-  document.getElementById('kpiGlobGeo').textContent   = fmt(globGeo);
+  const fmt = v => v !== null ? Math.round(v * 10) / 10 + '%' : '—';
+  document.getElementById('kpiRespArith').textContent = respArith !== null ? Math.round(respArith * 10) / 10 + '%' : '—';
+  document.getElementById('kpiRespGeo').textContent = fmt(respGeo);
+  document.getElementById('kpiDefiArith').textContent = defiArith !== null ? Math.round(defiArith * 10) / 10 + '%' : '—';
+  document.getElementById('kpiDefiGeo').textContent = fmt(defiGeo);
+  document.getElementById('kpiGlobArith').textContent = globArith !== null ? Math.round(globArith * 10) / 10 + '%' : '—';
+  document.getElementById('kpiGlobGeo').textContent = fmt(globGeo);
 
-  // Comparison
   renderCompare([
-    { label: 'Responsabilités', arith: respArith !== null ? Math.round(respArith*10)/10 : null, geo: respGeo !== null ? Math.round(respGeo*10)/10 : null, color: 'var(--blue)', colorGeo: '#1a5a9a' },
-    { label: 'Défis',           arith: defiArith !== null ? Math.round(defiArith*10)/10 : null, geo: defiGeo !== null ? Math.round(defiGeo*10)/10 : null, color: 'var(--green)', colorGeo: '#6a8a15' },
-    { label: 'Global',          arith: globArith !== null ? Math.round(globArith*10)/10 : null, geo: globGeo !== null ? Math.round(globGeo*10)/10 : null, color: 'var(--teal)', colorGeo: '#007a92' },
+    { label: 'Responsabilités', arith: respArith !== null ? Math.round(respArith * 10) / 10 : null, geo: respGeo !== null ? Math.round(respGeo * 10) / 10 : null, color: 'var(--blue)', colorGeo: '#1a5a9a' },
+    { label: 'Défis', arith: defiArith !== null ? Math.round(defiArith * 10) / 10 : null, geo: defiGeo !== null ? Math.round(defiGeo * 10) / 10 : null, color: 'var(--green)', colorGeo: '#6a8a15' },
+    { label: 'Global', arith: globArith !== null ? Math.round(globArith * 10) / 10 : null, geo: globGeo !== null ? Math.round(globGeo * 10) / 10 : null, color: 'var(--teal)', colorGeo: '#007a92' },
   ]);
 
-  // Bar charts
   renderBarRows('barsResp', RESP_QUESTIONS, respAvgs, 'var(--blue)');
   renderBarRows('barsDefi', DEFI_QUESTIONS, defiAvgs, 'var(--green)');
 
-  // Radar
   const allAvgs = [...respAvgs, ...defiAvgs];
-  const radarLabels = [...RESP_QUESTIONS, ...DEFI_QUESTIONS].map(q => q.replace(/^\d+\.\s/,''));
-  renderRadar(radarLabels, allAvgs.map(v => v !== null ? Math.round(v*10)/10 : 0));
+  const radarLabels = [...RESP_QUESTIONS, ...DEFI_QUESTIONS].map(q => q.replace(/^\d+\.\s/, ''));
+  renderRadar(radarLabels, allAvgs.map(v => v !== null ? Math.round(v * 10) / 10 : 0));
 
   document.getElementById('dashboard').style.display = 'grid';
   document.getElementById('footerBar').style.display = 'flex';
@@ -711,16 +687,18 @@ async function loadData() {
 
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('filterBar').style.display = 'flex';
+    populatePosteFilter();
+    const todayISO = new Date().toISOString().split('T')[0];
+    document.getElementById('dateFilter').value = todayISO;
     renderDashboard();
-  } catch(e) {
+  } catch (e) {
     console.error(e);
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('errorState').style.display = 'block';
   }
 }
 
-// Init
-document.getElementById('dateBadge').textContent = new Date().toLocaleDateString('fr-CA', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+document.getElementById('dateBadge').textContent = new Date().toLocaleDateString('fr-CA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 loadData();
 </script>
 </body>
