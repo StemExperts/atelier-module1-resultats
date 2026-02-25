@@ -434,7 +434,7 @@ body::before {
 // ══════════════════════════════════════════════════════
 // CONFIGURATION — changez seulement ces valeurs
 // ══════════════════════════════════════════════════════
-const CSV_URL = 'https://corsproxy.io/?url=' + encodeURIComponent('https://sheet.zohopublic.com/sheet/published/pv9kcea6425b01983412799844f2bd3244928?download=csv&sheetname=Données brutes');
+const CSV_URL = 'https://sheet.zohopublic.com/sheet/published/pv9kcea6425b01983412799844f2bd3244928?download=csv&sheetname=Données brutes';
 
 const RESP_QUESTIONS = [
   '1. Définir les gains à atteindre',
@@ -481,18 +481,23 @@ function parseCSV(text) {
     }
     cols.push(cur.trim());
     return cols;
-  }).filter(r => r.length > 10);
+  }).filter(r => {
+    if (r.length < 44) return false;
+    const val = parseFloat(r[43]);
+    return !isNaN(val) && val >= 1 && val <= 10;
+  });
 }
 
-// Get today's date string (matches Zoho format)
+// Get today's date string matching Zoho French format (e.g. "23 févr. 2026")
 function todayStr() {
   const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const months = ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
 function isSameDay(dateStr) {
   if (!dateStr) return false;
-  return dateStr.includes(todayStr()) || dateStr.startsWith(todayStr());
+  return dateStr.startsWith(todayStr());
 }
 
 function num(val) {
