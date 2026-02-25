@@ -215,22 +215,29 @@ body::before {
 .bar-row.low .bar-score { color: #e53e3e; }
 
 /* ── Comparison chart ── */
-.compare-rows { display: flex; flex-direction: column; gap: 14px; }
+.compare-rows { display: flex; flex-direction: column; gap: 20px; }
 .compare-row { }
 .compare-label {
-  font-size: 11px; color: var(--text-soft); margin-bottom: 5px;
-  display: flex; justify-content: space-between;
+  font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 8px;
+  display: flex; justify-content: space-between; align-items: center;
 }
 .compare-label strong { color: var(--text); }
-.compare-tracks { display: flex; flex-direction: column; gap: 4px; }
-.compare-track { display: flex; align-items: center; gap: 8px; }
+.ecart-badge {
+  font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+}
+.compare-tracks { display: flex; flex-direction: column; gap: 6px; }
+.compare-track { display: flex; align-items: center; gap: 10px; }
 .compare-track-label {
-  font-size: 10px; font-weight: 600; width: 32px; text-align: right;
+  font-size: 11px; font-weight: 700; width: 44px; text-align: right;
   text-transform: uppercase; letter-spacing: .06em;
 }
-.compare-bar-wrap { flex: 1; height: 10px; background: var(--cream-dark); border-radius: 5px; overflow: hidden; }
-.compare-bar { height: 100%; border-radius: 5px; transition: width 1s cubic-bezier(.4,0,.2,1); }
-.compare-val { font-size: 12px; font-weight: 700; width: 38px; text-align: right; }
+.compare-bar-wrap { flex: 1; height: 22px; background: var(--cream-dark); border-radius: 6px; overflow: hidden; }
+.compare-bar {
+  height: 100%; border-radius: 6px;
+  display: flex; align-items: center; justify-content: flex-end; padding-right: 8px;
+  transition: width 1s cubic-bezier(.4,0,.2,1);
+}
+.compare-bar-val { font-size: 11px; font-weight: 700; color: white; }
 
 /* ── Footer ── */
 .footer {
@@ -542,27 +549,33 @@ function renderCompare(sections) {
   el.innerHTML = '';
   sections.forEach(s => {
     const diff = s.arith !== null && s.geo !== null ? Math.round((s.arith - s.geo) * 10) / 10 : null;
+    const diffPositive = diff !== null && diff > 0;
+    const badgeStyle = diffPositive
+      ? 'background:#fde8e8;color:#c53030'
+      : 'background:#e8f5c0;color:#5a7a10';
     const row = document.createElement('div');
     row.className = 'compare-row';
     row.innerHTML = `
       <div class="compare-label">
         <strong>${s.label}</strong>
-        ${diff !== null ? `<span style="color:${diff > 0 ? '#e53e3e' : 'var(--green)'}">Écart : ${diff > 0 ? '-' : '+'}${Math.abs(diff)}%</span>` : ''}
+        ${diff !== null ? `<span class="ecart-badge" style="${badgeStyle}">Écart : ${diffPositive ? '-' : '+'}${Math.abs(diff)}%</span>` : ''}
       </div>
       <div class="compare-tracks">
         <div class="compare-track">
           <div class="compare-track-label" style="color:${s.color}">Arith.</div>
           <div class="compare-bar-wrap">
-            <div class="compare-bar" style="width:0%;background:${s.color}" data-pct="${s.arith || 0}"></div>
+            <div class="compare-bar" style="width:0%;background:${s.color}" data-pct="${s.arith || 0}">
+              <span class="compare-bar-val">${pct(s.arith)}</span>
+            </div>
           </div>
-          <div class="compare-val" style="color:${s.color}">${pct(s.arith)}</div>
         </div>
         <div class="compare-track">
           <div class="compare-track-label" style="color:${s.colorGeo}">Géom.</div>
           <div class="compare-bar-wrap">
-            <div class="compare-bar" style="width:0%;background:${s.colorGeo}" data-pct="${s.geo || 0}"></div>
+            <div class="compare-bar" style="width:0%;background:${s.colorGeo}" data-pct="${s.geo || 0}">
+              <span class="compare-bar-val">${pct(s.geo)}</span>
+            </div>
           </div>
-          <div class="compare-val" style="color:${s.colorGeo}">${pct(s.geo)}</div>
         </div>
       </div>`;
     el.appendChild(row);
