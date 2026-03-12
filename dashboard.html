@@ -514,9 +514,11 @@ body::before {
 const BASE_ZOHO_URL = 'https://sheet.zohopublic.com/sheet/published/w183q3cdc79a4595b490cb7eec15a24227ccf?download=csv&sheetname=Feuille1';
 
 const PROXIES = [
-  url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
-  url => 'https://corsproxy.io/?url='           + encodeURIComponent(url),
-  url => 'https://thingproxy.freeboard.io/fetch/' + url,
+  url => 'https://api.allorigins.win/raw?url='       + encodeURIComponent(url),
+  url => 'https://corsproxy.io/?url='                + encodeURIComponent(url),
+  url => 'https://api.codetabs.com/v1/proxy?quest='  + encodeURIComponent(url),
+  url => 'https://thingproxy.freeboard.io/fetch/'    + url,
+  url => 'https://jsonp.afeld.me/?url='              + encodeURIComponent(url),
 ];
 
 async function fetchCSVFromProxy() {
@@ -910,8 +912,8 @@ function renderTableM1() {
     const dateSoumiseCourte = dateSoumise.split(',')[0].trim();
 
     // Scores individuels
-    const [a,d,e,c,b] = COL_RESP.map(ci => num(r[ci]) || 0);
-    const [k,l,m,n,o] = COL_DEFI.map(ci => num(r[ci]) || 0);
+    const [a,d,e,c,b] = COL_RESP.map(ci => Math.round(num(r[ci]) || 0));
+    const [k,l,m,n,o] = COL_DEFI.map(ci => Math.round(num(r[ci]) || 0));
     const respTotal = a+d+e+c+b;
     const defiTotal = k+l+m+n+o;
     const globTotal = respTotal + defiTotal;
