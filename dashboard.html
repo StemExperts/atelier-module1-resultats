@@ -372,6 +372,14 @@ body::before {
   </div>
 </div>
 
+<div id="noDataMsg" style="display:none;max-width:1100px;margin:32px auto;padding:0 20px;">
+  <div style="background:#fff;border-radius:14px;padding:32px;box-shadow:0 4px 28px rgba(0,33,105,0.08);text-align:center;border-left:4px solid var(--yellow);">
+    <div style="font-size:28px;margin-bottom:12px;">📭</div>
+    <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--navy);margin-bottom:8px;">Aucune donnée pour cette date</div>
+    <div style="font-size:13px;color:#888;">Modifiez le filtre de date ci-dessus pour afficher les résultats d'une autre journée, ou effacez la date pour voir tous les participants.</div>
+  </div>
+</div>
+
 <div class="main" id="dashboard" style="display:none">
 
   <div class="kpi-grid">
@@ -679,10 +687,12 @@ function renderDashboard() {
 
   if (rows.length === 0) {
     document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('noDataMsg').style.display = 'block';
     document.getElementById('filterBar').style.display = 'flex';
     document.getElementById('footerBar').style.display = 'flex';
     return;
   }
+  document.getElementById('noDataMsg').style.display = 'none';
 
   const respAvgs = COL_RESP.map(ci => avg(rows.map(r => num(r[ci]))));
   const defiAvgs = COL_DEFI.map(ci => avg(rows.map(r => num(r[ci]))));
@@ -747,6 +757,8 @@ async function loadData() {
   // Tous les proxies ont échoué
   document.getElementById('loadingState').style.display = 'none';
   document.getElementById('errorState').style.display = 'block';
+  document.getElementById('filterBar').style.display = 'flex';
+  document.getElementById('footerBar').style.display = 'flex';
 }
 
 // Initialisation
