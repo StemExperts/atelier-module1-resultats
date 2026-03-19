@@ -199,6 +199,22 @@ body::before {
 }
 .card-title-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
+/* ── Radar groupe ── */
+.radar-group-card {
+  grid-column: 1 / -1;
+  background: var(--white); border-radius: 16px;
+  padding: 24px 20px; box-shadow: var(--shadow);
+}
+.radar-group-title {
+  font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  font-weight: 700; color: var(--navy); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.radar-group-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.zone-legend-dash { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; justify-content: center; }
+.zone-dot-dash { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #888; }
+.zone-dot-dash span { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
 /* ── Bar rows ── */
 .bar-rows { display: flex; flex-direction: column; gap: 10px; }
 .bar-row {
@@ -448,6 +464,23 @@ body::before {
       Arithmétique vs Géométrique
     </div>
     <div class="compare-rows" id="compareRows"></div>
+  </div>
+
+  <!-- Radar groupe -->
+  <div class="radar-group-card">
+    <div class="radar-group-title">
+      <span class="radar-group-dot" style="background:var(--navy);"></span>
+      Profil radar du groupe — 10 compétences
+    </div>
+    <canvas id="radarGroupChart" style="max-height:500px;width:100%;"></canvas>
+    <div class="zone-legend-dash">
+      <div class="zone-dot-dash"><span style="background:var(--blue);border-radius:2px;width:18px;height:4px;"></span> Responsabilités</div>
+      <div class="zone-dot-dash"><span style="background:var(--green);border-radius:2px;width:18px;height:4px;"></span> Défis</div>
+      <div style="width:1px;height:14px;background:#ddd;"></div>
+      <div class="zone-dot-dash"><span style="background:#95c11f;"></span> Élevé (8-10)</div>
+      <div class="zone-dot-dash"><span style="background:#ffc107;"></span> Moyen (5-7)</div>
+      <div class="zone-dot-dash"><span style="background:#e53e3e;"></span> Faible (0-4)</div>
+    </div>
   </div>
 
   <div class="chart-card">
@@ -723,6 +756,7 @@ function renderDashboard() {
 
   renderBarRows('barsResp', RESP_QUESTIONS, respAvgs, 'var(--blue)');
   renderBarRows('barsDefi', DEFI_QUESTIONS, defiAvgs, 'var(--green)');
+  renderGroupRadar(respAvgs, defiAvgs);
 
   document.getElementById('dashboard').style.display = 'grid';
   document.getElementById('footerBar').style.display = 'flex';
@@ -761,6 +795,83 @@ async function loadData() {
   document.getElementById('errorState').style.display = 'block';
   document.getElementById('filterBar').style.display = 'flex';
   document.getElementById('footerBar').style.display = 'flex';
+}
+
+// ── Radar groupe ─────────────────────────────────────────────────────────────
+let radarGroupChartInst = null;
+
+function renderGroupRadar(respAvgs, defiAvgs) {
+  const radarZonePlugin = {
+    id: 'radarZonesGroup',
+    beforeDraw(chart) {
+      const { ctx, scales } = chart;
+      const scale = scales.r;
+      if (!scale) return;
+      const center = { x: scale.xCenter, y: scale.yCenter };
+      const getR = val => scale.getDistanceFromCenterForValue(val);
+      [{max:10,color:'rgba(149,193,31,0.12)'},{max:7,color:'rgba(255,193,7,0.15)'},{max:4,color:'rgba(229,62,62,0.13)'}]
+      .forEach(z => { ctx.save(); ctx.beginPath(); ctx.arc(center.x,center.y,getR(z.max),0,Math.PI*2); ctx.fillStyle=z.color; ctx.fill(); ctx.restore(); });
+    }
+  };
+
+  const ALL_LABELS = [
+    ['Définir', 'les gains'],
+    ['Organiser', 'le travail'],
+    ['Communiquer /','Mobiliser'],
+    ['Mesurer', 'au fur et à mesure'],
+    ['Développer', 'son personnel'],
+    ['Exercer son', 'leadership'],
+    ['Organisation', 'optimale'],
+    ['Maîtriser la', 'communication'],
+    ["Travail", "d'équipe"],
+    ['Gestion', 'rigoureuse']
+  ];
+
+  const allData = [...respAvgs.map(v => v !== null ? Math.round(v * 10) / 10 : null),
+                   ...defiAvgs.map(v => v !== null ? Math.round(v * 10) / 10 : null)];
+
+  const pointColors = [
+    ...Array(5).fill('rgba(29,113,184,1)'),
+    ...Array(5).fill('rgba(149,193,31,1)')
+  ];
+
+  const radarCtx = document.getElementById('radarGroupChart').getContext('2d');
+  if (radarGroupChartInst) radarGroupChartInst.destroy();
+  radarGroupChartInst = new Chart(radarCtx, {
+    type: 'radar',
+    plugins: [radarZonePlugin],
+    data: {
+      labels: ALL_LABELS,
+      datasets: [{
+        label: 'Groupe',
+        data: allData,
+        backgroundColor: 'rgba(29,113,184,0.12)',
+        borderColor: 'rgba(29,113,184,0.7)',
+        borderWidth: 2.5,
+        pointBackgroundColor: pointColors,
+        pointRadius: 6,
+        pointHoverRadius: 8,
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        r: {
+          min: 0, max: 10,
+          ticks: { stepSize: 2, font:{size:9}, color:'#aaa', backdropColor:'transparent' },
+          pointLabels: { font:{size:10,family:"'DM Sans',sans-serif"}, color:'#002169', padding:20 },
+          grid: { color:'rgba(0,33,105,0.08)' },
+          angleLines: { color:'rgba(0,33,105,0.1)' },
+        }
+      },
+      layout: { padding:{top:10,bottom:10,left:24,right:24} },
+      plugins: {
+        legend: { display:false },
+        tooltip: { callbacks: { label: ctx => (ctx.dataIndex < 5 ? 'Resp.' : 'Défi') + ' : ' + ctx.raw + ' / 10' } }
+      },
+      animation: { duration:900 }
+    }
+  });
 }
 
 // Initialisation
