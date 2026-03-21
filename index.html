@@ -803,10 +803,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Badges de zone
   function zoneFromPct(pct) {
-    if (pct >= 80) return { label:'Équipe mobilisée',     bg:'#e8f5c0', txt:'#3a7000' };
-    if (pct >= 60) return { label:'Mobilisation fragile',  bg:'#fff3cd', txt:'#7a4f00' };
-    if (pct >= 40) return { label:'Mobilisation faible',   bg:'#ffe8cc', txt:'#8b3a00' };
-    return             { label:'Équipe démobilisée',       bg:'#fde8e8', txt:'#8b0000' };
+    if (pct >= 80) return { label:'Gestion accompliee',     bg:'#e8f5c0', txt:'#3a7000' };
+    if (pct >= 60) return { label:'Gestion compétente',  bg:'#fff3cd', txt:'#7a4f00' };
+    if (pct >= 40) return { label:'Gestion en développement',   bg:'#ffe8cc', txt:'#8b3a00' };
+    return             { label:'Gestion en difficultée',       bg:'#fde8e8', txt:'#8b0000' };
   }
   function badgeHTML(zone, value) {
     return '<span style="display:inline-block;background:' + zone.bg + ';color:' + zone.txt + ';'
