@@ -478,7 +478,7 @@ body::before {
       <div class="zone-dot-dash"><span style="background:var(--green);border-radius:2px;width:18px;height:4px;"></span> Défis</div>
       <div style="width:1px;height:14px;background:#ddd;"></div>
       <div class="zone-dot-dash"><span style="background:#95c11f;"></span> Élevé (8-10)</div>
-      <div class="zone-dot-dash"><span style="background:#ffc107;"></span> Moyen (5-7)</div>
+      <div class="zone-dot-dash"><span style="background:#ffed00;"></span> Moyen (5-7)</div>
       <div class="zone-dot-dash"><span style="background:#e53e3e;"></span> Faible (0-4)</div>
     </div>
   </div>
@@ -809,7 +809,7 @@ function renderGroupRadar(respAvgs, defiAvgs) {
       if (!scale) return;
       const center = { x: scale.xCenter, y: scale.yCenter };
       const getR = val => scale.getDistanceFromCenterForValue(val);
-      [{max:10,color:'rgba(149,193,31,0.12)'},{max:7,color:'rgba(255,193,7,0.15)'},{max:4,color:'rgba(229,62,62,0.13)'}]
+      [{max:10,color:'rgba(149,193,31,0.34)'},{max:7,color:'rgba(255,235,7,0.38)'},{max:4,color:'rgba(220,38,38,0.40)'}]
       .forEach(z => { ctx.save(); ctx.beginPath(); ctx.arc(center.x,center.y,getR(z.max),0,Math.PI*2); ctx.fillStyle=z.color; ctx.fill(); ctx.restore(); });
     }
   };
