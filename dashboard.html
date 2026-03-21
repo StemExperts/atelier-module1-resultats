@@ -876,10 +876,10 @@ function renderGroupRadar(respAvgs, defiAvgs, arithPct, geoPct) {
 
   // Badges de zone (sur 100%)
   function zoneFromPct(pct) {
-    if (pct >= 80) return { label:'Équipe mobilisée',    bg:'#e8f5c0', txt:'#3a7000' };
-    if (pct >= 60) return { label:'Mobilisation fragile', bg:'#fff3cd', txt:'#7a4f00' };
-    if (pct >= 40) return { label:'Mobilisation faible',  bg:'#ffe8cc', txt:'#8b3a00' };
-    return             { label:'Équipe démobilisée',      bg:'#fde8e8', txt:'#8b0000' };
+    if (pct >= 80) return { label:'Gestion accomplie',    bg:'#e8f5c0', txt:'#3a7000' };
+    if (pct >= 60) return { label:'Gestion compétente', bg:'#fff3cd', txt:'#7a4f00' };
+    if (pct >= 40) return { label:'Gestion en développement',  bg:'#ffe8cc', txt:'#8b3a00' };
+    return             { label:'Gestion en difficulté',      bg:'#fde8e8', txt:'#8b0000' };
   }
 
   function badgeHTML(zone, value) {
