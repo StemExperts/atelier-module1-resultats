@@ -567,16 +567,16 @@ body::before {
         <thead>
           <tr>
             <th style="text-align:left;padding:8px 12px;background:#f5f7fa;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#1d71b8;">Participant</th>
-            <th style="text-align:left;padding:8px 12px;background:#f5f7fa;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#1d71b8;">Pharmacie</th>
-            <th style="text-align:left;padding:8px 12px;background:#f5f7fa;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#1d71b8;">Poste</th>
-            <th style="text-align:left;padding:8px 12px;background:#f5f7fa;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#1d71b8;white-space:normal;min-width:72px;">Date<br>de l'atelier</th>
-            <th style="text-align:left;padding:8px 12px;background:#f5f7fa;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#1d71b8;white-space:normal;min-width:72px;">Date<br>soumise</th>
+            <th style="text-align:left;padding:8px 12px;background:#f5f7fa;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#1d71b8;">Pharmacy</th>
+            <th style="text-align:left;padding:8px 12px;background:#f5f7fa;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#1d71b8;">Position</th>
+            <th style="text-align:left;padding:8px 12px;background:#f5f7fa;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#1d71b8;white-space:normal;min-width:72px;">Workshop<br>date</th>
+            <th style="text-align:left;padding:8px 12px;background:#f5f7fa;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#1d71b8;white-space:normal;min-width:72px;">Date<br>submitted</th>
             <th style="text-align:left;padding:8px 12px;background:#f5f7fa;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#1d71b8;white-space:normal;min-width:72px;">Respon-<br>sibilities</th>
             <th style="text-align:left;padding:8px 12px;background:#f5f7fa;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#1d71b8;">Challenges</th>
             <th style="text-align:left;padding:8px 12px;background:#f5f7fa;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#1d71b8;">Total</th>
             <th style="text-align:left;padding:8px 12px;background:#f5f7fa;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#1d71b8;">%<br>Arith.</th>
-            <th style="text-align:left;padding:8px 12px;background:#f5f7fa;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#1d71b8;">%<br>Géo.</th>
-            <th style="text-align:left;padding:8px 12px;background:#f5f7fa;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#1d71b8;">Résultats</th>
+            <th style="text-align:left;padding:8px 12px;background:#f5f7fa;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#1d71b8;">%<br>Geo.</th>
+            <th style="text-align:left;padding:8px 12px;background:#f5f7fa;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#1d71b8;">Results</th>
           </tr>
         </thead>
         <tbody id="m1TableBody"></tbody>
@@ -749,7 +749,7 @@ function renderCompare(sections) {
     const row = document.createElement('div');
     row.className = 'compare-row';
     row.innerHTML = `
-      <div class="compare-label"><strong>${s.label}</strong>${diff !== null ? `<span class="ecart-badge" style="${badgeStyle}">Écart : ${diff > 0 ? '-' : '+'}${Math.abs(diff)}%</span>` : ''}</div>
+      <div class="compare-label"><strong>${s.label}</strong>${diff !== null ? `<span class="ecart-badge" style="${badgeStyle}">Difference : ${diff > 0 ? '-' : '+'}${Math.abs(diff)}%</span>` : ''}</div>
       <div class="compare-tracks">
         <div class="compare-track"><div class="compare-track-label" style="color:${s.color}">Arith.</div><div class="compare-bar-wrap"><div class="compare-bar" style="width:0%;background:${s.color}" data-pct="${s.arith || 0}"><span class="compare-bar-val">${Math.round(s.arith * 10) / 10}%</span></div></div></div>
         <div class="compare-track"><div class="compare-track-label" style="color:${s.colorGeo}">Geo.</div><div class="compare-bar-wrap"><div class="compare-bar" style="width:0%;background:${s.colorGeo}" data-pct="${s.geo || 0}"><span class="compare-bar-val">${Math.round(s.geo * 10) / 10}%</span></div></div></div>
@@ -1149,7 +1149,7 @@ function renderTableM1() {
       + '<td style="padding:14px 12px;font-family:\'Playfair Display\',serif;font-size:17px;font-weight:700;color:' + globColor + '">' + globTotal + '<span style="font-size:11px;color:#aaa;font-family:\'DM Sans\',sans-serif;">/100</span></td>'
       + '<td style="padding:14px 12px;font-size:12px;color:#888;">' + globPct + '%</td>'
       + '<td style="padding:14px 12px;font-size:12px;color:#888;">' + globGeoPct + '%</td>'
-      + '<td style="padding:14px 12px;"><a href="' + resultURL + '" target="_blank" style="font-size:11px;color:var(--blue);text-decoration:none;padding:5px 10px;background:#d0e4f5;border-radius:6px;white-space:nowrap;display:inline-block;">Voir résultats ↗</a></td>';
+      + '<td style="padding:14px 12px;"><a href="' + resultURL + '" target="_blank" style="font-size:11px;color:var(--blue);text-decoration:none;padding:5px 10px;background:#d0e4f5;border-radius:6px;white-space:nowrap;display:inline-block;">Results ↗</a></td>';
     tbody.appendChild(tr);
   });
 }
