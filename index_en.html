@@ -43,7 +43,7 @@
   }
 
   .page {
-    max-width: 820px;
+    max-width: 1060px;
     margin: 0 auto;
     padding: 48px 20px 80px;
     position: relative; z-index: 1;
@@ -61,11 +61,11 @@
   }
   .header h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(26px,5vw,42px); font-weight: 700;
+    font-size: clamp(21px,4vw,34px); font-weight: 700;
     line-height: 1.2; margin-bottom: 10px;
   }
   .participant-line {
-    font-size: 14px; color: var(--ink-soft);
+    font-size: 21px; color: var(--ink-soft);
   }
   .participant-line strong { color: var(--blue); font-weight: 600; }
   .divider {
@@ -105,7 +105,7 @@
   }
   .score-value {
     font-family: 'Playfair Display', serif;
-    font-size: 40px; font-weight: 700; line-height: 1; margin-bottom: 2px;
+    font-size: 26px; font-weight: 700; line-height: 1; margin-bottom: 2px;
   }
   .score-card.resp  .score-value { color: var(--blue); }
   .score-card.defi  .score-value { color: var(--gold); }
@@ -435,29 +435,19 @@
         <!-- Guide d'interprétation -->
         <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--cream-dark);">
           <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;margin-bottom:14px;color:var(--ink);">Interpretation Guide</div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;">
-            <div style="background:#e8f5c0;color:#3a5a00;border-radius:10px;padding:14px 16px;font-size:12px;line-height:1.5;">
-              <strong style="display:block;font-size:13px;margin-bottom:6px;">🟢 Accomplished Management: 90% – 100%</strong>
-              Management acts as a strategic performance driver. It anticipates needs, optimizes practices and continuously develops the team in order to exceed expected results and ensure sustainable growth.
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+            <div style="background:#fde8e8;color:#8b1a1a;border-radius:10px;padding:14px 16px;font-size:12px;line-height:1.5;">
+              <strong style="display:block;font-size:13px;margin-bottom:6px;">🔴 Management in Difficulty<br><span style="font-weight:400;display:block;text-align:center;margin-top:2px;">0% – 44%</span></strong>
+              Management fails to deliver expected results. Actions are mostly reactive, poorly structured and inconsistent, leading to frequent gaps between objectives and outcomes.
               <div style="margin-top:8px;font-size:11px;font-weight:600;">Observed impact:</div>
               <ul style="margin-left:14px;margin-top:4px;">
-                <li>Superior and sustainable performance</li>
-                <li>Strong team mobilization and engagement</li>
-                <li>Resilient and scalable organization</li>
-              </ul>
-            </div>
-            <div style="background:#dbeafe;color:#1e3a5f;border-radius:10px;padding:14px 16px;font-size:12px;line-height:1.5;">
-              <strong style="display:block;font-size:13px;margin-bottom:6px;">🔵 Competent Management: 75% – 89%</strong>
-              Management is structured, consistent and applied constantly. It delivers expected results in a predictable way through clear and repeatable practices.
-              <div style="margin-top:8px;font-size:11px;font-weight:600;">Observed impact:</div>
-              <ul style="margin-left:14px;margin-top:4px;">
-                <li>Stable and predictable performance</li>
-                <li>Better control of operations</li>
-                <li>Reduction of emergencies and surprises</li>
+                <li>Loss of operational control</li>
+                <li>Unstable work environment</li>
+                <li>Weak or unpredictable performance</li>
               </ul>
             </div>
             <div style="background:#ffe8cc;color:#8b3a00;border-radius:10px;padding:14px 16px;font-size:12px;line-height:1.5;">
-              <strong style="display:block;font-size:13px;margin-bottom:6px;">🟠 Management in Development: 45% – 74%</strong>
+              <strong style="display:block;font-size:13px;margin-bottom:6px;">🟠 Management in Development<br><span style="font-weight:400;display:block;text-align:center;margin-top:2px;">45% – 74%</span></strong>
               Some management practices are in place but are not yet mastered or consistently applied. Results are variable and often depend on individual efforts.
               <div style="margin-top:8px;font-size:11px;font-weight:600;">Observed impact:</div>
               <ul style="margin-left:14px;margin-top:4px;">
@@ -466,14 +456,24 @@
                 <li>Variable team engagement</li>
               </ul>
             </div>
-            <div style="background:#fde8e8;color:#8b1a1a;border-radius:10px;padding:14px 16px;font-size:12px;line-height:1.5;">
-              <strong style="display:block;font-size:13px;margin-bottom:6px;">🔴 Management in Difficulty: 0% – 44%</strong>
-              Management fails to deliver expected results. Actions are mostly reactive, poorly structured and inconsistent, leading to frequent gaps between objectives and outcomes.
+            <div style="background:#dbeafe;color:#1e3a5f;border-radius:10px;padding:14px 16px;font-size:12px;line-height:1.5;">
+              <strong style="display:block;font-size:13px;margin-bottom:6px;">🔵 Competent Management<br><span style="font-weight:400;display:block;text-align:center;margin-top:2px;">75% – 89%</span></strong>
+              Management is structured, consistent and applied constantly. It delivers expected results in a predictable way through clear and repeatable practices.
               <div style="margin-top:8px;font-size:11px;font-weight:600;">Observed impact:</div>
               <ul style="margin-left:14px;margin-top:4px;">
-                <li>Loss of operational control</li>
-                <li>Unstable work environment</li>
-                <li>Weak or unpredictable performance</li>
+                <li>Stable and predictable performance</li>
+                <li>Better control of operations</li>
+                <li>Reduction of emergencies and surprises</li>
+              </ul>
+            </div>
+            <div style="background:#e8f5c0;color:#3a5a00;border-radius:10px;padding:14px 16px;font-size:12px;line-height:1.5;">
+              <strong style="display:block;font-size:13px;margin-bottom:6px;">🟢 Accomplished Management<br><span style="font-weight:400;display:block;text-align:center;margin-top:2px;">90% – 100%</span></strong>
+              Management acts as a strategic performance driver. It anticipates needs, optimizes practices and continuously develops the team in order to exceed expected results and ensure sustainable growth.
+              <div style="margin-top:8px;font-size:11px;font-weight:600;">Observed impact:</div>
+              <ul style="margin-left:14px;margin-top:4px;">
+                <li>Superior and sustainable performance</li>
+                <li>Strong team mobilization and engagement</li>
+                <li>Resilient and scalable organization</li>
               </ul>
             </div>
           </div>
