@@ -105,7 +105,7 @@
   }
   .score-value {
     font-family: 'Playfair Display', serif;
-    font-size: 26px; font-weight: 700; line-height: 1; margin-bottom: 2px;
+    font-size: 36px; font-weight: 700; line-height: 1; margin-bottom: 2px;
   }
   .score-card.resp  .score-value { color: var(--blue); }
   .score-card.defi  .score-value { color: var(--gold); }
@@ -116,10 +116,8 @@
   .score-pct {
     display: inline-block; font-size: 12px; font-weight: 600;
     padding: 3px 10px; border-radius: 20px;
+    background: #f0f2f7; color: var(--ink-soft);
   }
-  .score-card.resp  .score-pct { background:var(--blue-light);  color:var(--blue);  }
-  .score-card.defi  .score-pct { background:var(--gold-bg);     color:#a07c20;      }
-  .score-card.total .score-pct { background:var(--green-light); color:var(--green); }
 
   /* ── Geo mean card ───────────────────────────────────────── */
   .geo-card {
@@ -298,21 +296,21 @@
     <div class="score-row">
       <div class="score-card resp">
         <div class="score-label">Responsibilities</div>
-        <div class="score-value" id="respScore">–</div>
-        <div class="score-denom">out of 50</div>
-        <div class="score-pct"  id="respPct">–</div>
+        <div class="score-value" id="respPct">–</div>
+        <div class="score-denom">geometric mean</div>
+        <div class="score-pct"  id="respScore">–</div>
       </div>
       <div class="score-card defi">
         <div class="score-label">Challenges</div>
-        <div class="score-value" id="defiScore">–</div>
-        <div class="score-denom">out of 50</div>
-        <div class="score-pct"  id="defiPct">–</div>
+        <div class="score-value" id="defiPct">–</div>
+        <div class="score-denom">geometric mean</div>
+        <div class="score-pct"  id="defiScore">–</div>
       </div>
       <div class="score-card total">
         <div class="score-label">Overall Score</div>
-        <div class="score-value" id="totalScore">–</div>
-        <div class="score-denom">out of 100</div>
-        <div class="score-pct"  id="totalPct">–</div>
+        <div class="score-value" id="totalPct">–</div>
+        <div class="score-denom">geometric mean</div>
+        <div class="score-pct"  id="totalScore">–</div>
       </div>
     </div>
 
@@ -349,37 +347,12 @@
         <div>
           <div class="chart-lbl">Scores by section</div>
           <canvas id="barChart"></canvas>
-          <div style="display:flex;justify-content:center;gap:20px;margin-top:10px;font-family:'DM Sans',sans-serif;font-size:11px;color:#4a5a8a;">
-            <div style="display:flex;align-items:center;gap:6px;">
-              <strong style="color:#002169;">Arithmetic:</strong>
-              <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:rgba(29,113,184,0.88)"></span>
-              <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:rgba(149,193,31,0.88)"></span>
-              <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:rgba(0,144,172,0.88)"></span>
-            </div>
-            <div style="display:flex;align-items:center;gap:6px;">
-              <strong style="color:#002169;">Geometric:</strong>
-              <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:rgba(29,113,184,0.38)"></span>
-              <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:rgba(149,193,31,0.38)"></span>
-              <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:rgba(0,144,172,0.38)"></span>
-            </div>
-          </div>
+
         </div>
         <div>
           <div class="donut-stack">
             <div>
               <div class="chart-lbl">Overall Score</div>
-              <div class="donut-wrap">
-                <div class="donut-rel">
-                  <canvas id="donutChart" width="150" height="150"></canvas>
-                  <div class="donut-center">
-                    <span class="big" id="donutNum" style="color:var(--blue)">–</span>
-                    <span class="sm">%</span>
-                  </div>
-                </div>
-                <div class="donut-block-lbl">Arithmetic</div>
-              </div>
-            </div>
-            <div>
               <div class="donut-wrap">
                 <div class="donut-rel">
                   <canvas id="donutGeoChart" width="150" height="150"></canvas>
@@ -425,6 +398,7 @@
         <div class="zone-legend" style="justify-content:center;gap:20px;margin-top:16px;">
           <div class="zone-dot"><span style="background:rgba(29,113,184,1);border-radius:50%;"></span> Responsibilities</div>
           <div class="zone-dot"><span style="background:rgba(149,193,31,1);border-radius:50%;"></span> Challenges</div>
+          <div class="zone-dot"><span style="width:18px;height:3px;border-radius:0;border-top:2px dashed rgba(226,75,74,0.8);background:none;display:inline-block;"></span> Recalibrated score (−20%)</div>
           <div style="width:1px;height:14px;background:#ddd;"></div>
           <div class="zone-dot"><span style="background:#95c11f;"></span> High (8-10)</div>
           <div class="zone-dot"><span style="background:#ffed00;"></span> Medium (5-7)</div>
@@ -612,16 +586,15 @@ window.addEventListener('DOMContentLoaded', () => {
   const geoD = geoMean(defiVals);
   const geoG = geoMean(allVals);
 
-  document.getElementById('respScore').textContent  = respSum;
-  document.getElementById('defiScore').textContent  = defiSum;
-  document.getElementById('totalScore').textContent = total;
-  document.getElementById('respPct').textContent    = respPct + ' %';
-  document.getElementById('defiPct').textContent    = defiPct + ' %';
-  document.getElementById('totalPct').textContent   = totPct  + ' %';
+  document.getElementById('respPct').textContent   = geoR + ' %';
+  document.getElementById('defiPct').textContent   = geoD + ' %';
+  document.getElementById('totalPct').textContent  = geoG + ' %';
+  document.getElementById('respScore').textContent = respSum + ' / 50';
+  document.getElementById('defiScore').textContent = defiSum + ' / 50';
+  document.getElementById('totalScore').textContent = total + ' / 100';
   document.getElementById('geoResp').textContent    = geoR + ' %';
   document.getElementById('geoDefi').textContent    = geoD + ' %';
   document.getElementById('geoTotal').textContent   = geoG + ' %';
-  document.getElementById('donutNum').textContent   = totPct;
 
   // Bars
   renderBars('respBars', RESP_Q, respVals, 'var(--blue)');
@@ -635,16 +608,9 @@ window.addEventListener('DOMContentLoaded', () => {
       labels: ['Responsibilities', 'Challenges', 'Overall'],
       datasets: [
         {
-          label: 'Arithmétique',
-          data: [respPct, defiPct, totPct],
-          backgroundColor: ['rgba(29,113,184,0.88)', 'rgba(149,193,31,0.88)', 'rgba(0,144,172,0.88)'],
-          borderRadius: 5,
-          borderSkipped: false,
-        },
-        {
-          label: 'Géométrique',
+          label: 'Geometric',
           data: [geoR, geoD, geoG],
-          backgroundColor: ['rgba(29,113,184,0.38)', 'rgba(149,193,31,0.38)', 'rgba(0,144,172,0.38)'],
+          backgroundColor: ['rgba(29,113,184,0.88)', 'rgba(149,193,31,0.88)', 'rgba(0,144,172,0.88)'],
           borderRadius: 5,
           borderSkipped: false,
         }
@@ -682,7 +648,7 @@ window.addEventListener('DOMContentLoaded', () => {
             meta.data.forEach((bar, i) => {
               const val = dataset.data[i];
               if (val == null) return;
-              ctx.fillStyle = di === 0 ? '#002169' : '#4a5a8a';
+              ctx.fillStyle = '#002169';
               ctx.fillText(val + '%', bar.x, bar.y - 4);
             });
           });
@@ -691,23 +657,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Donut arithmétique
-  const dCtx = document.getElementById('donutChart').getContext('2d');
-  new Chart(dCtx, {
-    type: 'doughnut',
-    data: {
-      datasets: [{
-        data: [totPct, 100 - totPct],
-        backgroundColor: ['rgba(29,113,184,0.88)', 'rgba(232,236,242,0.7)'],
-        borderWidth: 0,
-      }]
-    },
-    options: {
-      responsive: false, cutout: '72%',
-      plugins: { legend: { display: false }, tooltip: { enabled: false } },
-      animation: { animateRotate: true, duration: 1200, easing: 'easeOutQuart' }
-    }
-  });
+
 
   // Donut géométrique
   document.getElementById('donutGeoNum').textContent = geoG;
@@ -834,7 +784,7 @@ window.addEventListener('DOMContentLoaded', () => {
       labels: ALL_LABELS,
       datasets: [
         {
-          label: 'Compétences (géo.)',
+          label: 'Skills (geo.)',
           data: radarDataGeo,
           backgroundColor: 'rgba(29,113,184,0.12)',
           borderColor: 'rgba(29,113,184,0.7)',
@@ -842,6 +792,17 @@ window.addEventListener('DOMContentLoaded', () => {
           pointBackgroundColor: pointColors,
           pointRadius: 6,
           pointHoverRadius: 8,
+        },
+        {
+          label: 'Recalibrated score (−20%)',
+          data: radarDataGeo.map(v => v !== null ? Math.round(v * 0.8 * 10) / 10 : null),
+          backgroundColor: 'rgba(226,75,74,0.07)',
+          borderColor: 'rgba(226,75,74,0.8)',
+          borderWidth: 2,
+          borderDash: [6, 4],
+          pointBackgroundColor: 'rgba(226,75,74,1)',
+          pointRadius: 4,
+          pointHoverRadius: 6,
         }
       ]
     },
@@ -859,7 +820,7 @@ window.addEventListener('DOMContentLoaded', () => {
       layout: { padding: { top: 10, bottom: 10, left: 24, right: 24 } },
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: { label: ctx => (ctx.dataIndex < 5 ? 'Resp.' : 'Challenge') + ' (geo.) : ' + ctx.raw + ' / 10' } }
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ' : ' + ctx.raw + ' / 10' } }
       },
       animation: { duration: 1000 }
     }
