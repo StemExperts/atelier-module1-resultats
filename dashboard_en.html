@@ -601,7 +601,7 @@ async function fetchCSVFromProxy() {
 }
 
 const RESP_QUESTIONS = ['1. Defining gains to be achieved','2. Organizing work to guarantee goals','3. Communicating and mobilizing staff','4. Measuring along the way','5. Developing staff'];
-const DEFI_QUESTIONS = ['1. Exercising leadership','2. Optimal work organization','3. Mastering communication','4. Establishing teamwork','5. Rigorous management practices'];
+const DEFI_QUESTIONS = ['1. Exercising leadership','2. Optimal work organization','3. Mastering communication','4. Rigorous management practices','5. Establishing teamwork'];
 
 const COL_RESP = [43, 44, 45, 46, 47];
 const COL_DEFI = [48, 49, 50, 51, 52];
@@ -888,8 +888,8 @@ function renderGroupRadar(respAvgs, defiAvgs, arithPct, geoPct) {
     ['Exercising', 'leadership'],
     ['Optimal work', 'organization'],
     ['Mastering', 'communication'],
-    ['Sustaining', 'teamwork'],
-    ['Rigorous', 'management']
+    ['Rigorous', 'management'],
+    ['Sustaining', 'teamwork']
   ];
 
   // Scores géométriques par axe : ratio géo/arith appliqué à chaque valeur
