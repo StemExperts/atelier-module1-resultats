@@ -344,6 +344,18 @@ body::before {
 .main > *:nth-child(3) { animation-delay: 0.3s; }
 .main > *:nth-child(4) { animation-delay: 0.4s; }
 @keyframes fadeUp { to { opacity: 1; transform: none; } }
+.search-wrap{position:relative;flex:1;min-width:200px;max-width:100%;}
+.search-wrap input{width:100%;padding:10px 40px 10px 14px;border:1.5px solid #dde2ef;border-radius:10px;font-size:14px;font-family:inherit;color:#002169;background:#fff;outline:none;transition:border-color .2s;}
+.search-wrap input:focus{border-color:#1d71b8;}
+.search-wrap .search-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#aaa;pointer-events:none;font-size:15px;}
+.search-wrap .search-clear{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#aaa;cursor:pointer;font-size:16px;line-height:1;display:none;}
+.search-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid #dde2ef;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.1);max-height:260px;overflow-y:auto;z-index:200;display:none;}
+.search-dropdown.open{display:block;}
+.search-option{padding:9px 14px;font-size:13px;cursor:pointer;color:#002169;border-bottom:0.5px solid #f0f2f7;transition:background .15s;}
+.search-option:last-child{border-bottom:none;}
+.search-option:hover,.search-option.active{background:#f0f5ff;}
+.search-option .opt-company{font-size:11px;color:#aaa;margin-left:6px;}
+.search-option.opt-all{font-weight:600;color:#0090ac;}
 </style>
 </head>
 <body>
@@ -541,9 +553,13 @@ body::before {
     </div>
     <div style="background:#fff;border-radius:14px;padding:24px;box-shadow:0 4px 28px rgba(0,33,105,0.10);overflow-x:auto;">
       <div style="display:flex;align-items:center;margin-bottom:16px;gap:12px;flex-wrap:wrap;">
-        <select id="m1SearchInput" onchange="renderTableM1()" style="padding:8px 14px;border:1px solid #e8ecf2;border-radius:8px;font-family:inherit;font-size:13px;width:280px;outline:none;cursor:pointer;">
-          <option value="">— Sélectionner un participant —</option>
-        </select>
+        <div class="search-wrap" id="m1SearchWrap">
+          <input type="text" id="m1SearchInput" placeholder="Rechercher un participant…" autocomplete="off"
+            oninput="filterM1Dropdown()" onfocus="openM1Dropdown()" onkeydown="m1KeyNav(event)">
+          <span class="search-icon" id="m1SearchIcon">🔍</span>
+          <span class="search-clear" id="m1SearchClear" onclick="clearM1Search()">✕</span>
+          <div class="search-dropdown" id="m1SearchDropdown"></div>
+        </div>
       </div>
       <table id="m1IndividualTable" style="display:none;width:100%;border-collapse:collapse;font-size:13px;">
         <thead>
@@ -629,7 +645,12 @@ function parseCSV(text) {
     }
     cols.push(cur.trim());
     return cols;
-  }).filter(r => r.length > 50);
+  }).filter(r => {
+    if (r.length <= 50) return false;
+    // Toutes les questions numériques doivent être remplies (COL_RESP + COL_DEFI = indices 43-52)
+    const qCols = [43, 44, 45, 46, 47, 48, 49, 50, 51, 52];
+    return qCols.every(i => r[i] !== undefined && r[i].trim() !== '' && !isNaN(parseFloat(r[i])));
+  });
 }
 
 /**
@@ -829,6 +850,9 @@ function renderDashboard() {
   document.getElementById('footerBar').style.display = 'flex';
   document.getElementById('lastSync').textContent = 'Actualisé à ' + new Date().toLocaleTimeString('fr-CA');
 
+  window._m1Selected = '';
+  const inp = document.getElementById('m1SearchInput');
+  if (inp) { inp.value = ''; inp.placeholder = 'Rechercher un participant…'; }
   populateParticipantSelect();
   const sel = document.getElementById('m1SearchInput');
   if (sel) sel.value = '';
@@ -1061,38 +1085,129 @@ const COL_DATE_SOUMISE  = 55;  // "La réponse est terminée" (col BD)
 // COL_DEFI = [48,49,50,51,52] → k,l,m,n,o
 
 function populateParticipantSelect() {
-  const sel = document.getElementById('m1SearchInput');
-  if (!sel) return;
-  const current = sel.value;
-  while (sel.options.length > 0) sel.remove(0);
-
-  const opt0 = document.createElement('option');
-  opt0.value = ''; opt0.textContent = '— Sélectionner un participant —';
-  sel.appendChild(opt0);
-
-  const optAll = document.createElement('option');
-  optAll.value = '__tous__'; optAll.textContent = 'Tous les participants';
-  sel.appendChild(optAll);
-
-  const sorted = allRows.slice().sort((a, b) => {
+  // Construire les options depuis les lignes filtrées par date
+  const filteredRows = getFilteredRowsM1();
+  const sorted = filteredRows.slice().sort((a, b) => {
     const na = ((a[COL_PRENOM]||'') + ' ' + (a[COL_NOM]||'')).trim();
     const nb = ((b[COL_PRENOM]||'') + ' ' + (b[COL_NOM]||'')).trim();
     return na.localeCompare(nb, 'fr');
   });
+  window._m1Options = sorted.map(r => ({
+    value: ((r[COL_PRENOM]||'') + ' ' + (r[COL_NOM]||'')).trim(),
+    label: ((r[COL_PRENOM]||'') + ' ' + (r[COL_NOM]||'')).trim(),
+    company: r[COL_PHARMACIE] || ''
+  }));
+  filterM1Dropdown();
+}
 
-  sorted.forEach(r => {
-    const name = ((r[COL_PRENOM]||'') + ' ' + (r[COL_NOM]||'')).trim();
-    const company = r[COL_PHARMACIE] || '';
-    const opt = document.createElement('option');
-    opt.value = name;
-    opt.textContent = name + (company ? ' — ' + company : '');
-    sel.appendChild(opt);
-  });
+function openM1Dropdown() {
+  filterM1Dropdown();
+  document.getElementById('m1SearchDropdown').classList.add('open');
+}
 
-  for (let i = 0; i < sel.options.length; i++) {
-    if (sel.options[i].value === current) { sel.value = current; break; }
+function filterM1Dropdown() {
+  const input  = document.getElementById('m1SearchInput');
+  const q      = (input ? input.value : '').toLowerCase().trim();
+  const dd     = document.getElementById('m1SearchDropdown');
+  const clear  = document.getElementById('m1SearchClear');
+  const icon   = document.getElementById('m1SearchIcon');
+  if (!dd) return;
+
+  if (q.length > 0) {
+    if (clear) clear.style.display = 'block';
+    if (icon)  icon.style.display  = 'none';
+  } else {
+    if (clear) clear.style.display = 'none';
+    if (icon)  icon.style.display  = 'block';
+  }
+
+  const opts = window._m1Options || [];
+  const matches = q === ''
+    ? opts
+    : opts.filter(o => o.label.toLowerCase().includes(q) || o.company.toLowerCase().includes(q));
+
+  dd.innerHTML = '';
+
+  // Option "Tous"
+  const allDiv = document.createElement('div');
+  allDiv.className = 'search-option opt-all';
+  allDiv.textContent = 'Tous les participants';
+  allDiv.dataset.value = '__tous__';
+  allDiv.addEventListener('mousedown', e => { e.preventDefault(); selectM1Option('__tous__', ''); });
+  dd.appendChild(allDiv);
+
+  if (matches.length === 0) {
+    const noDiv = document.createElement('div');
+    noDiv.className = 'search-option';
+    noDiv.style.color = '#aaa';
+    noDiv.textContent = 'Aucun résultat';
+    dd.appendChild(noDiv);
+  } else {
+    matches.forEach(o => {
+      const div = document.createElement('div');
+      div.className = 'search-option';
+      div.dataset.value = o.value;
+      div.innerHTML = o.label + (o.company ? '<span class="opt-company">— ' + o.company + '</span>' : '');
+      div.addEventListener('mousedown', e => { e.preventDefault(); selectM1Option(o.value, o.label); });
+      dd.appendChild(div);
+    });
+  }
+  dd.classList.add('open');
+}
+
+function selectM1Option(value, label) {
+  const input = document.getElementById('m1SearchInput');
+  const dd    = document.getElementById('m1SearchDropdown');
+  window._m1Selected = value;
+  if (value === '__tous__') {
+    if (input) { input.value = ''; input.placeholder = 'Tous les participants'; }
+  } else {
+    if (input) input.value = label;
+  }
+  if (dd) dd.classList.remove('open');
+  renderTableM1();
+}
+
+function clearM1Search() {
+  const input = document.getElementById('m1SearchInput');
+  if (input) { input.value = ''; input.placeholder = 'Rechercher un participant…'; }
+  window._m1Selected = '';
+  filterM1Dropdown();
+  renderTableM1();
+}
+
+function m1KeyNav(e) {
+  const dd = document.getElementById('m1SearchDropdown');
+  if (!dd) return;
+  const items = dd.querySelectorAll('.search-option[data-value]');
+  const active = dd.querySelector('.search-option.active');
+  let idx = -1;
+  items.forEach((el, i) => { if (el === active) idx = i; });
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (active) active.classList.remove('active');
+    const next = items[Math.min(idx + 1, items.length - 1)];
+    if (next) next.classList.add('active');
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (active) active.classList.remove('active');
+    const prev = items[Math.max(idx - 1, 0)];
+    if (prev) prev.classList.add('active');
+  } else if (e.key === 'Enter') {
+    if (active) { selectM1Option(active.dataset.value, active.textContent.replace(/—.*/, '').trim()); }
+  } else if (e.key === 'Escape') {
+    dd.classList.remove('open');
   }
 }
+
+// Fermer dropdown en cliquant ailleurs
+document.addEventListener('click', function(e) {
+  const wrap = document.getElementById('m1SearchWrap');
+  if (wrap && !wrap.contains(e.target)) {
+    const dd = document.getElementById('m1SearchDropdown');
+    if (dd) dd.classList.remove('open');
+  }
+});
 
 function getFilteredRowsM1() {
   const dateVal  = document.getElementById('dateFilter').value;
@@ -1106,8 +1221,7 @@ function getFilteredRowsM1() {
 }
 
 function renderTableM1() {
-  const selEl  = document.getElementById('m1SearchInput');
-  const sel    = selEl ? selEl.value : '';
+  const sel    = window._m1Selected || '';
   const tbody  = document.getElementById('m1TableBody');
   const tableEl = document.getElementById('m1IndividualTable');
   if (!tbody) return;
