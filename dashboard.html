@@ -680,6 +680,23 @@ function zohoDateToISO(dateStr) {
   return `${year}-${month}-${day}`;
 }
 
+/**
+ * Convertit la "Date de l'atelier" (colonne D, question obligatoire du sondage)
+ * du format MM/DD/YYYY vers ISO YYYY-MM-DD.
+ */
+function parseAtelierDate(val) {
+  if (!val) return null;
+  const str = String(val).trim();
+  if (!str) return null;
+
+  const m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!m) return null;
+
+  const month = m[1].padStart(2, '0');
+  const day   = m[2].padStart(2, '0');
+  return `${m[3]}-${month}-${day}`;
+}
+
 // ── FONCTIONS DE CALCUL ──
 
 function num(val) {
@@ -748,7 +765,7 @@ function renderDashboard() {
   const posteVal = document.getElementById('posteFilter').value;
 
   let rows = allRows.filter(r => {
-    const isoDate = zohoDateToISO(r[COL_DATE]);
+    const isoDate = parseAtelierDate(r[COL_DATE_ATELIER]);
     const matchesDate = !dateVal || isoDate === dateVal;
     const matchesPoste = posteVal === 'all' || r[COL_POSTE] === posteVal;
     return matchesDate && matchesPoste;
@@ -1050,7 +1067,7 @@ function processCSVFile(file) {
     // Sélectionner la date la plus récente présente dans le fichier
     const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
     const datesInFile = allRows
-      .map(r => zohoDateToISO(r[COL_DATE]))
+      .map(r => parseAtelierDate(r[COL_DATE_ATELIER]))
       .filter(Boolean);
     const mostRecent = datesInFile.sort().pop();
     document.getElementById('dateFilter').value = mostRecent || today;
@@ -1213,7 +1230,7 @@ function getFilteredRowsM1() {
   const dateVal  = document.getElementById('dateFilter').value;
   const posteVal = document.getElementById('posteFilter').value;
   return allRows.filter(r => {
-    const isoDate = zohoDateToISO(r[COL_DATE]);
+    const isoDate = parseAtelierDate(r[COL_DATE_ATELIER]);
     const matchesDate  = !dateVal  || isoDate === dateVal;
     const matchesPoste = posteVal === 'all' || r[COL_POSTE] === posteVal;
     return matchesDate && matchesPoste;
